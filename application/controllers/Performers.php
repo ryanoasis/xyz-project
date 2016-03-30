@@ -6,8 +6,11 @@ class Performers extends CI_Controller {
 
 	public function index()
 	{
+		parse_str($_SERVER['QUERY_STRING']);
+
 		$this->load->database();
-		$query = $this->db->query('SELECT * FROM performers');
+
+		$query = $this->db->query('SELECT * FROM performers limit ' . $offset . ', ' . $limit);
 
 		$items['columns'] = $query->list_fields();
 

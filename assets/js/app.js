@@ -6,13 +6,19 @@ $(function() {
 	init();
 
 	function init() {
-		getPerformers();
+		var options = {
+			offset: 0,
+			limit: 25
+		};
+
+		getPerformers(options);
 	}
 
-	function getPerformers() {
+	function getPerformers(options) {
 		$.ajax({
 			url: "index.php/performers",
 			dataType: "json",
+			data: { offset: options.offset, limit: options.limit },
 			success: successHandler,
 			error: errorHandler
 		});

@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 	<meta charset="utf-8">
 	<title>XYZ</title>
-	<link rel="stylesheet" type="text/css" href="app.css" />
+	<link rel="stylesheet" type="text/css" href="assets/css/app.css" />
 </head>
 <body>
 
