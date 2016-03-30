@@ -12,7 +12,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div id="container">
 	<h1>XYZ</h1>
+	<table id="performers">
+		<thead>
+		</thead>
 
+		<tbody>
+		</tbody>
+
+		<tfoot>
+		</tfoot>
+	</table>
 </div>
 <!-- non blocking JS ;) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
