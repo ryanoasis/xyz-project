@@ -7,14 +7,19 @@ class Performers extends CI_Controller {
 	public function index()
 	{
 		$this->load->database();
-		$query = $this->db->query('SELECT id, act_name FROM performers');
+		$query = $this->db->query('SELECT * FROM performers');
+
+		$items['columns'] = $query->list_fields();
 
 		foreach ($query->result() as $row)
 		{
-			echo $row->id;
-			echo $row->act_name;
+			foreach ($row as $key => $value) {
+				$item[$key] = $value;
+			}
+			$items['data'][] = $item;
 		}
 
-		echo 'Total Results: ' . $query->num_rows();
+		echo json_encode($items);
+
 	}
 }
