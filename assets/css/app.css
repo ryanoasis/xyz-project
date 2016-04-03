@@ -2,3 +2,7 @@
 #performers img {
 	width: 33%;
 }
+
+.performer-detail-page {
+	display: none;
+}
