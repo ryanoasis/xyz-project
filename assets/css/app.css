@@ -1,8 +1,17 @@
 
 #performers img {
-	width: 33%;
+	width: 200px;
 }
 
 .performer-detail-page {
 	display: none;
 }
+
+table#performers td.loader {
+	height: 100px;
+	background: url('https://d13yacurqjgara.cloudfront.net/users/82092/screenshots/1073359/spinner.gif') no-repeat 50%;
+	background-size: 10%;
+	text-align: center;
+	background-color: white;
+}
+

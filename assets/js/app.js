@@ -3,6 +3,12 @@ $(function() {
 	 * Application level
 	 */
 
+	var columns = 7;
+	/**
+	 * @property {number} delay The delay in ms to test the ajax with
+	 */
+	var delay = 2000;
+
 	init();
 
 	function init() {
@@ -13,6 +19,7 @@ $(function() {
 
 		$("#performers")
 		.bootstrapTable({
+			showToggle: true,
 			columns: [
 				{ field: "act_name", title: "Act Name", sortable: true },
 				{ field: "thumbnail", title: "Thumbnail" },
@@ -35,6 +42,9 @@ $(function() {
 				getPerformers({ sort: name, direction: order });
 			}
 		});
+
+		addLoader();
+
 		getPerformers(options);
 
 		$(window).on("popstate", function(e) {
@@ -68,13 +78,15 @@ $(function() {
 			data.sort = options.sort;
 		}
 
-		$.ajax({
-			url: "index.php/performers",
-			dataType: "json",
-			data: data,
-			success: successHandler,
-			error: errorHandler
-		});
+		setTimeout(function() {
+			$.ajax({
+				url: "index.php/performers",
+				dataType: "json",
+				data: data,
+				success: successHandler,
+				error: errorHandler
+			});
+		}, delay);
 	}
 
 	function successHandler(response) {
@@ -120,7 +132,9 @@ $(function() {
 		$("#performers")
 			.bootstrapTable("load", { total: 100, rows: response.data });
 
-		$("#performers a").on("click", function(e) {
+		removeLoader();
+
+		$("#performers").delegate("a", "click", function(e) {
 			var url = $(this).attr("href").split("/")[1];
 			var performer = getPerformerFromCacheByURL(url);
 			e.preventDefault();
@@ -141,6 +155,7 @@ $(function() {
 
 	function errorHandler() {
 		console.log("error");
+		removeLoader();
 	}
 
 	function renderPerformersList() {
@@ -168,5 +183,13 @@ $(function() {
 
 	function getPerformerFromCacheByID(id) {
 		return $.cache.performers.filter(function(item) { return item.ID === id; })[0];
+	}
+
+	function addLoader() {
+		$("#performers tbody").empty().append("<tr><td class='loader' colspan=" + columns + "></td></tr>");
+	}
+
+	function removeLoader() {
+		$("#performers tbody tr td.loader").closest("tr").remove();
 	}
 });
