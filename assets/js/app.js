@@ -14,9 +14,7 @@ $(function() {
 		$("#performers")
 		.bootstrapTable({
 			columns: [
-				{ field: "ID", title: "ID" },
 				{ field: "act_name", title: "Act Name", sortable: true },
-				{ field: "url", title: "" },
 				{ field: "thumbnail", title: "Thumbnail" },
 				{ field: "city_name", title: "City", sortable: true },
 				{ field: "state_code", title: "State Code", sortable: true },
@@ -38,6 +36,22 @@ $(function() {
 			}
 		});
 		getPerformers(options);
+
+		$(window).on("popstate", function(e) {
+			//console.log(e);
+			//console.log("popstate");
+			//console.log(history.state);
+			renderState(history.state);
+		});
+	}
+
+	function renderState(state) {
+		if (state.view === "index") {
+			renderPerformersList();
+		}
+		else if (state.view === "details") {
+			renderPerformer(getPerformerFromCacheByID(state.id));
+		}
 	}
 
 	function getPerformers(options) {
@@ -64,6 +78,7 @@ $(function() {
 	}
 
 	function successHandler(response) {
+		//console.log("success");
 		// todo check response
 
 		var data = response.data;
@@ -72,41 +87,23 @@ $(function() {
 		var field;
 		var row;
 
-		for (; i < dataLength; i++) {
-			row = data[i];
-
-			for (field in row) {
-				if (field === "thumbnail") {
-					row[field] = "<img src='" + JSON.parse(row[field]).url + "' />";
-				}
-			}
-		}
-
-		$.ajax({
-			url: "index.php/performers",
-			dataType: "json",
-			data: data,
-			success: successHandler,
-			error: errorHandler
-		});
-	}
-
-	function successHandler(response) {
-		console.log("success");
-		// todo check response
-
-		var data = response.data;
-		var dataLength = data.length;
-		var i = 0;
-		var field;
-		var row;
+		// simple cache
+		$.cache = {};
+		$.cache.performers = $.extend(true, [], data);
 
 		for (; i < dataLength; i++) {
 			row = data[i];
 
 			for (field in row) {
-				if (field === "thumbnail") {
-					row[field] = "<img src='" + JSON.parse(row[field]).url + "' />";
+				// safety first ;)
+				if (row.hasOwnProperty(field)) {
+					if (field === "thumbnail") {
+						row[field] = "<a href='performer/" + row.url + "'><img src='" + JSON.parse(row[field]).url + "' /></a>";
+					}
+
+					if (field === "act_name") {
+						row[field] = "<a href='performer/" + row.url + "'>" + row[field] + "</a>";
+					}
 				}
 			}
 		}
@@ -122,9 +119,54 @@ $(function() {
 
 		$("#performers")
 			.bootstrapTable("load", { total: 100, rows: response.data });
+
+		$("#performers a").on("click", function(e) {
+			var url = $(this).attr("href").split("/")[1];
+			var performer = getPerformerFromCacheByURL(url);
+			e.preventDefault();
+			console.log(url);
+			renderPerformer(performer);
+		});
+
+		$("#performerClose").on("click", function(e) {
+			var href = window.location.href;
+			var index = href.substr(0, href.lastIndexOf("/") + 1);
+			history.pushState({ view: "index", id: "" }, "", index);
+			//renderPerformersList();
+			renderState(history.state);
+		});
+
+		history.pushState({ view: "index", id: "" }, "", window.location.href);
 	}
 
 	function errorHandler() {
 		console.log("error");
+	}
+
+	function renderPerformersList() {
+		$(".pages").hide();
+		$(".performers-list-page").show();
+	}
+
+	function renderPerformer(performer) {
+		var imgURL = JSON.parse(performer.thumbnail).url;
+
+		$(".pages").hide();
+		console.log(performer);
+		console.log(performer.act_name);
+		$(".performer-detail-page").find('h3').text(performer.act_name);
+		$(".performer-detail-page").find('img').attr("src", imgURL);
+		$(".performer-detail-page").find('.info').empty();
+		$(".performer-detail-page").find('.info').append(performer.category_name + "<br/>" + performer.city_name + ", " + performer.state_name);
+		$(".performer-detail-page").show();
+		history.pushState({ view: "details", id: performer.ID }, performer.act_name, performer.url);
+	}
+
+	function getPerformerFromCacheByURL(url) {
+		return $.cache.performers.filter(function(item) { return item.url === url; })[0];
+	}
+
+	function getPerformerFromCacheByID(id) {
+		return $.cache.performers.filter(function(item) { return item.ID === id; })[0];
 	}
 });

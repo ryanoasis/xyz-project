@@ -20,14 +20,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div id="container">
 	<h1>XYZ</h1>
-	<table id="performers">
-		<thead>
-		</thead>
-		<tbody>
-		</tbody>
-		<tfoot>
-		</tfoot>
-	</table>
+	<div class="pages performers-list-page">
+		<table id="performers">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+			</tfoot>
+		</table>
+	</div>
+	<div class="pages performer-detail-page">
+		<h3></h3>
+		<div class="info"></div>
+		<img src="" />
+		<br/>
+		<br/>
+		<div id="performerClose" class="btn btn-primary">Close</div>
+	</div>
 </div>
 
 <!-- non blocking JS ;) -->
