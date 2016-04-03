@@ -150,6 +150,20 @@ $(function() {
 			renderState(history.state);
 		});
 
+		$("#performerNext").on("click", function(e) {
+			var next = getNextPerformer($.cache.currentPerformer);
+			$(".performer-detail-page").animate(
+				{ width: "toggle" },
+				{
+					duration: 800,
+					done: function() {
+						renderPerformer(next);
+						//$(".performer-detail-page").animate({ width: "toggle" });
+					}
+				}
+			);
+		});
+
 		history.pushState({ view: "index", id: "" }, "", window.location.href);
 	}
 
@@ -165,6 +179,8 @@ $(function() {
 
 	function renderPerformer(performer) {
 		var imgURL = JSON.parse(performer.thumbnail).url;
+
+		$.cache.currentPerformer = performer;
 
 		$(".pages").hide();
 		console.log(performer);
@@ -183,6 +199,23 @@ $(function() {
 
 	function getPerformerFromCacheByID(id) {
 		return $.cache.performers.filter(function(item) { return item.ID === id; })[0];
+	}
+
+	function getNextPerformer(performer) {
+		var i = 0;
+		var performers = $.cache.performers;
+		var length = performers.length;
+
+		for (; i < length; i++) {
+			if (performers[i].ID === performer.ID) {
+				if (i === length - 1) {
+					return performers[0];
+				}
+				else {
+					return performers[i + 1];
+				}
+			}
+		}
 	}
 
 	function addLoader() {
