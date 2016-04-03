@@ -8,9 +8,17 @@ class Performers extends CI_Controller {
 	{
 		parse_str($_SERVER['QUERY_STRING']);
 
+		$queryCommand = 'SELECT * FROM performers';
+
+		if (isset($sort, $direction)) {
+			$queryCommand .= " ORDER BY " . $sort . " " . $direction;
+		}
+
+		$queryCommand .= ' LIMIT ' . $offset . ', ' . $limit;
+
 		$this->load->database();
 
-		$query = $this->db->query('SELECT * FROM performers limit ' . $offset . ', ' . $limit);
+		$query = $this->db->query($queryCommand);
 
 		$items['columns'] = $query->list_fields();
 
