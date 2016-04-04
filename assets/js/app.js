@@ -60,7 +60,7 @@ $(function() {
 			renderPerformersList();
 		}
 		else if (state.view === "details") {
-			renderPerformer(getPerformerFromCacheByID(state.id));
+			renderPerformer(getPerformerFromCacheByID(state.id), true);
 		}
 	}
 
@@ -139,7 +139,7 @@ $(function() {
 			var performer = getPerformerFromCacheByURL(url);
 			e.preventDefault();
 			console.log(url);
-			renderPerformer(performer);
+			renderPerformer(performer, true);
 		});
 
 		$("#performerClose").on("click", function(e) {
@@ -150,16 +150,28 @@ $(function() {
 			renderState(history.state);
 		});
 
+		$("#performerPrevious").on("click", function(e) {
+			var next = getPreviousPerformer($.cache.currentPerformer);
+			$(".performer-detail-page .content").hide(
+				"slide",
+				{ direction: "right" },
+				300,
+				function() {
+					renderPerformer(next, true);
+					$(".performer-detail-page .content").show("slide", { direction: "left" }, 300);
+				}
+			);
+		});
+
 		$("#performerNext").on("click", function(e) {
 			var next = getNextPerformer($.cache.currentPerformer);
-			$(".performer-detail-page").animate(
-				{ width: "toggle" },
-				{
-					duration: 800,
-					done: function() {
-						renderPerformer(next);
-						//$(".performer-detail-page").animate({ width: "toggle" });
-					}
+			$(".performer-detail-page .content").hide(
+				"slide",
+				{ direction: "left" },
+				300,
+				function() {
+					renderPerformer(next, true);
+					$(".performer-detail-page .content").show("slide", { direction: "right" }, 300);
 				}
 			);
 		});
@@ -177,7 +189,7 @@ $(function() {
 		$(".performers-list-page").show();
 	}
 
-	function renderPerformer(performer) {
+	function renderPerformer(performer, show) {
 		var imgURL = JSON.parse(performer.thumbnail).url;
 
 		$.cache.currentPerformer = performer;
@@ -189,7 +201,11 @@ $(function() {
 		$(".performer-detail-page").find('img').attr("src", imgURL);
 		$(".performer-detail-page").find('.info').empty();
 		$(".performer-detail-page").find('.info').append(performer.category_name + "<br/>" + performer.city_name + ", " + performer.state_name);
-		$(".performer-detail-page").show();
+
+		if (show) {
+			$(".performer-detail-page").show();
+		}
+
 		history.pushState({ view: "details", id: performer.ID }, performer.act_name, performer.url);
 	}
 
@@ -199,6 +215,23 @@ $(function() {
 
 	function getPerformerFromCacheByID(id) {
 		return $.cache.performers.filter(function(item) { return item.ID === id; })[0];
+	}
+
+	function getPreviousPerformer(performer) {
+		var i = 0;
+		var performers = $.cache.performers;
+		var length = performers.length;
+
+		for (; i < length; i++) {
+			if (performers[i].ID === performer.ID) {
+				if (i === 0) {
+					return performers[length - 1];
+				}
+				else {
+					return performers[i - 1];
+				}
+			}
+		}
 	}
 
 	function getNextPerformer(performer) {

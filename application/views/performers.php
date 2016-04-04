@@ -31,14 +31,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</table>
 	</div>
 	<div class="pages performer-detail-page">
+	<div id="performerPrevious" class="btn btn-primary"><-</div>
+	<div class="content">
 		<h3></h3>
 		<div class="info"></div>
-		<div id="performerPrevious" class="btn btn-primary"><-</div>
 		<img src="" />
-		<div id="performerNext" class="btn btn-primary">-></div>
 		<br/>
 		<br/>
-		<div id="performerClose" class="btn btn-primary">Close</div>
+	</div>
+	<div id="performerNext" class="btn btn-primary">-></div>
+	<div style="clear:both"></div>
+	<div id="performerClose" class="btn btn-primary">Close</div>
 	</div>
 </div>
 

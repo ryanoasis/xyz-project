@@ -5,6 +5,7 @@
 
 .performer-detail-page {
 	display: none;
+	max-width: 600px;
 }
 
 table#performers td.loader {
@@ -15,3 +16,11 @@ table#performers td.loader {
 	background-color: white;
 }
 
+#performerPrevious, #performerNext {
+	float: left;
+}
+
+.performer-detail-page .content {
+	float: left;
+	margin: 10px;
+}
