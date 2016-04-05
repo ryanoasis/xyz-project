@@ -47,17 +47,21 @@ $(function() {
 
 		getPerformers(options);
 
-		$(window).on("popstate", function(e) {
-			renderState(history.state);
+		window.addEventListener('popstate', function(event) {
+			renderState(history.state, false);
 		});
 	}
 
-	function renderState(state) {
+	function renderState(state, pushState) {
+		if (typeof pushState === "undefined") {
+			pushState = true;
+		}
+
 		if (state.view === "index") {
 			renderPerformersList();
 		}
 		else if (state.view === "details") {
-			renderPerformer(getPerformerFromCacheByID(state.id), true);
+			renderPerformer(getPerformerFromCacheByID(state.id), true, pushState);
 		}
 	}
 
@@ -181,8 +185,12 @@ $(function() {
 		$(".performers-list-page").show();
 	}
 
-	function renderPerformer(performer, show) {
+	function renderPerformer(performer, show, pushState) {
 		var imgURL = JSON.parse(performer.thumbnail).url;
+
+		if (typeof pushState === "undefined") {
+			pushState = true;
+		}
 
 		$.cache.currentPerformer = performer;
 
@@ -196,7 +204,9 @@ $(function() {
 			$(".performer-detail-page").show();
 		}
 
-		history.pushState({ view: "details", id: performer.ID }, performer.act_name, performer.url);
+		if (pushState) {
+			history.pushState({ view: "details", id: performer.ID }, performer.act_name, performer.url);
+		}
 	}
 
 	function getPerformerFromCacheByURL(url) {
