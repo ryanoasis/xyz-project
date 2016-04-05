@@ -48,9 +48,6 @@ $(function() {
 		getPerformers(options);
 
 		$(window).on("popstate", function(e) {
-			//console.log(e);
-			//console.log("popstate");
-			//console.log(history.state);
 			renderState(history.state);
 		});
 	}
@@ -90,9 +87,6 @@ $(function() {
 	}
 
 	function successHandler(response) {
-		//console.log("success");
-		// todo check response
-
 		var data = response.data;
 		var dataLength = data.length;
 		var i = 0;
@@ -138,7 +132,6 @@ $(function() {
 			var url = $(this).attr("href").split("/")[1];
 			var performer = getPerformerFromCacheByURL(url);
 			e.preventDefault();
-			console.log(url);
 			renderPerformer(performer, true);
 		});
 
@@ -180,7 +173,6 @@ $(function() {
 	}
 
 	function errorHandler() {
-		console.log("error");
 		removeLoader();
 	}
 
@@ -195,8 +187,6 @@ $(function() {
 		$.cache.currentPerformer = performer;
 
 		$(".pages").hide();
-		console.log(performer);
-		console.log(performer.act_name);
 		$(".performer-detail-page").find('h3').text(performer.act_name);
 		$(".performer-detail-page").find('img').attr("src", imgURL);
 		$(".performer-detail-page").find('.info').empty();
