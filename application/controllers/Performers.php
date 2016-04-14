@@ -10,6 +10,12 @@ class Performers extends CI_Controller {
 
 		$queryCommand = 'SELECT * FROM performers';
 
+		if (isset($text)) {
+			$searchableFields = ["act_name", "category_name", "state_name", "city_name"];
+			//$queryCommand .= " WHERE `act_name` like '%" . $text . "%' ";
+			$queryCommand .= " WHERE `" . implode("` like '%" . $text . "%' OR `", $searchableFields) . "` like '%" . $text . "%' ";
+		}
+
 		if (isset($sort, $direction)) {
 			$queryCommand .= " ORDER BY " . $sort . " " . $direction;
 		}

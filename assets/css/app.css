@@ -23,4 +23,5 @@ table#performers td.loader {
 .performer-detail-page .content {
 	float: left;
 	margin: 10px;
+	max-width: 500px;
 }

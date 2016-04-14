@@ -35,6 +35,10 @@ $(function() {
 			sidePagination: 'server',
 			showColumns: true,
 			search: true,
+			searchOnEnterKey: true,
+			onSearch: function(text) {
+				getPerformers({ text: text });
+			},
 			onPageChange: function(number, size) {
 				getPerformers({ offset: (number - 1) * options.limit });
 			},
@@ -77,6 +81,10 @@ $(function() {
 
 		if (options.sort) {
 			data.sort = options.sort;
+		}
+
+		if (options.text) {
+			data.text = options.text;
 		}
 
 		setTimeout(function() {
@@ -205,6 +213,7 @@ $(function() {
 		}
 
 		if (pushState) {
+			console.log("pushing state: ", performer.url);
 			history.pushState({ view: "details", id: performer.ID }, performer.act_name, performer.url);
 		}
 	}
